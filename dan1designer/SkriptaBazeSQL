@@ -1,0 +1,675 @@
+/*==============================================================*/
+/* DBMS name:      Sybase SQL Anywhere 11                       */
+/* Created on:     01.08.2017. 10.30.18                         */
+/*==============================================================*/
+
+
+if exists(select 1 from sys.sysforeignkey where role='FK_CLAN_CLANBOLUJ_OBILJENJ') then
+    alter table CLAN
+       delete foreign key FK_CLAN_CLANBOLUJ_OBILJENJ
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_CLAN_CLANDOLAZ_NASELJEN') then
+    alter table CLAN
+       delete foreign key FK_CLAN_CLANDOLAZ_NASELJEN
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_CLAN_CLANPRIPA_ORGANIZA') then
+    alter table CLAN
+       delete foreign key FK_CLAN_CLANPRIPA_ORGANIZA
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_CLAN_CLANPRIPA_PORODICA') then
+    alter table CLAN
+       delete foreign key FK_CLAN_CLANPRIPA_PORODICA
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_NASELJEN_NASELJENO_DRZAVA') then
+    alter table NASELJENO_MJESTO
+       delete foreign key FK_NASELJEN_NASELJENO_DRZAVA
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_NASELJEN_ORGANIZAC_ORGANIZA') then
+    alter table NASELJENO_MJESTO
+       delete foreign key FK_NASELJEN_ORGANIZAC_ORGANIZA
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_NASELJEN_RADNIKIMA_RADNIK') then
+    alter table NASELJENO_MJESTO
+       delete foreign key FK_NASELJEN_RADNIKIMA_RADNIK
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_RADNIK_RADNIKIMA_RADNOMJE') then
+    alter table RADNIK
+       delete foreign key FK_RADNIK_RADNIKIMA_RADNOMJE
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_RADNIK_RADNIKZAN_ORGANIZA') then
+    alter table RADNIK
+       delete foreign key FK_RADNIK_RADNIKZAN_ORGANIZA
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_RADNIKIM_RADNIKIMA_ZANIMANJ') then
+    alter table RADNIKIMAZANIMANJE
+       delete foreign key FK_RADNIKIM_RADNIKIMA_ZANIMANJ
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_RADNIKIM_RADNIKIMA_RADNIK') then
+    alter table RADNIKIMAZANIMANJE
+       delete foreign key FK_RADNIKIM_RADNIKIMA_RADNIK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='CLANPRIPADAPORODICI_FK'
+     and t.table_name='CLAN'
+) then
+   drop index CLAN.CLANPRIPADAPORODICI_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='CLANBOLUJEODOBOLJENJA_FK'
+     and t.table_name='CLAN'
+) then
+   drop index CLAN.CLANBOLUJEODOBOLJENJA_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='CLANDOLAZIIZNASELJENOGMJESTA_FK'
+     and t.table_name='CLAN'
+) then
+   drop index CLAN.CLANDOLAZIIZNASELJENOGMJESTA_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='CLANPRIPADAORGANIZACIJI_FK'
+     and t.table_name='CLAN'
+) then
+   drop index CLAN.CLANPRIPADAORGANIZACIJI_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='CLAN_PK'
+     and t.table_name='CLAN'
+) then
+   drop index CLAN.CLAN_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='CLAN'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table CLAN
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='DRZAVA_PK'
+     and t.table_name='DRZAVA'
+) then
+   drop index DRZAVA.DRZAVA_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='DRZAVA'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table DRZAVA
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKIMANASELJENOMJESTO_FK'
+     and t.table_name='NASELJENO_MJESTO'
+) then
+   drop index NASELJENO_MJESTO.RADNIKIMANASELJENOMJESTO_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='ORGANIZACIJAPRIPADANASELJENOMMJESTU_FK'
+     and t.table_name='NASELJENO_MJESTO'
+) then
+   drop index NASELJENO_MJESTO.ORGANIZACIJAPRIPADANASELJENOMMJESTU_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='NASELJENOMJESTOPRIPADADRZAVI_FK'
+     and t.table_name='NASELJENO_MJESTO'
+) then
+   drop index NASELJENO_MJESTO.NASELJENOMJESTOPRIPADADRZAVI_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='NASELJENO_MJESTO_PK'
+     and t.table_name='NASELJENO_MJESTO'
+) then
+   drop index NASELJENO_MJESTO.NASELJENO_MJESTO_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='NASELJENO_MJESTO'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table NASELJENO_MJESTO
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='OBILJENJA_PK'
+     and t.table_name='OBILJENJA'
+) then
+   drop index OBILJENJA.OBILJENJA_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='OBILJENJA'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table OBILJENJA
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='ORGANIZACIJA_PK'
+     and t.table_name='ORGANIZACIJA'
+) then
+   drop index ORGANIZACIJA.ORGANIZACIJA_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='ORGANIZACIJA'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table ORGANIZACIJA
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='PORODICA_PK'
+     and t.table_name='PORODICA'
+) then
+   drop index PORODICA.PORODICA_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='PORODICA'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table PORODICA
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKIMARADNOMJESTO_FK'
+     and t.table_name='RADNIK'
+) then
+   drop index RADNIK.RADNIKIMARADNOMJESTO_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKZANIMANJEORGANIZACIJA_FK'
+     and t.table_name='RADNIK'
+) then
+   drop index RADNIK.RADNIKZANIMANJEORGANIZACIJA_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIK_PK'
+     and t.table_name='RADNIK'
+) then
+   drop index RADNIK.RADNIK_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='RADNIK'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table RADNIK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKIMAZANIMANJE_FK'
+     and t.table_name='RADNIKIMAZANIMANJE'
+) then
+   drop index RADNIKIMAZANIMANJE.RADNIKIMAZANIMANJE_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKIMAZANIMANJE2_FK'
+     and t.table_name='RADNIKIMAZANIMANJE'
+) then
+   drop index RADNIKIMAZANIMANJE.RADNIKIMAZANIMANJE2_FK
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNIKIMAZANIMANJE_PK'
+     and t.table_name='RADNIKIMAZANIMANJE'
+) then
+   drop index RADNIKIMAZANIMANJE.RADNIKIMAZANIMANJE_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='RADNIKIMAZANIMANJE'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table RADNIKIMAZANIMANJE
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='RADNOMJESTO_PK'
+     and t.table_name='RADNOMJESTO'
+) then
+   drop index RADNOMJESTO.RADNOMJESTO_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='RADNOMJESTO'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table RADNOMJESTO
+end if;
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='ZANIMANJE_PK'
+     and t.table_name='ZANIMANJE'
+) then
+   drop index ZANIMANJE.ZANIMANJE_PK
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='ZANIMANJE'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table ZANIMANJE
+end if;
+
+/*==============================================================*/
+/* Table: CLAN                                                  */
+/*==============================================================*/
+create table CLAN 
+(
+   CLANID               integer                        not null,
+   ORGANIZACIJAID       integer                        null,
+   NASELJENOMJESTOID    integer                        null,
+   OBOLJENJEID          smallint                       null,
+   PORODICAID           smallint                       null,
+   CLANIME              varchar(20)                    not null,
+   CLANPREZIME          varchar(50)                    not null,
+   CLANDATUMRODJENJA    timestamp                      null,
+   CLANJMBG             varchar(13)                    not null,
+   CLANBROJCLANSKEKARTE varchar(20)                    null,
+   CLANADRESA           varchar(50)                    null,
+   CLANPOL              char(1)                        null
+      constraint CKC_CLANPOL_CLAN check (CLANPOL is null or (CLANPOL in ('M','Z'))),
+   constraint PK_CLAN primary key (CLANID)
+);
+
+/*==============================================================*/
+/* Index: CLAN_PK                                               */
+/*==============================================================*/
+create unique index CLAN_PK on CLAN (
+CLANID ASC
+);
+
+/*==============================================================*/
+/* Index: CLANPRIPADAORGANIZACIJI_FK                            */
+/*==============================================================*/
+create index CLANPRIPADAORGANIZACIJI_FK on CLAN (
+ORGANIZACIJAID ASC
+);
+
+/*==============================================================*/
+/* Index: CLANDOLAZIIZNASELJENOGMJESTA_FK                       */
+/*==============================================================*/
+create index CLANDOLAZIIZNASELJENOGMJESTA_FK on CLAN (
+NASELJENOMJESTOID ASC
+);
+
+/*==============================================================*/
+/* Index: CLANBOLUJEODOBOLJENJA_FK                              */
+/*==============================================================*/
+create index CLANBOLUJEODOBOLJENJA_FK on CLAN (
+OBOLJENJEID ASC
+);
+
+/*==============================================================*/
+/* Index: CLANPRIPADAPORODICI_FK                                */
+/*==============================================================*/
+create index CLANPRIPADAPORODICI_FK on CLAN (
+PORODICAID ASC
+);
+
+/*==============================================================*/
+/* Table: DRZAVA                                                */
+/*==============================================================*/
+create table DRZAVA 
+(
+   DRZAVAID             integer                        not null,
+   DRZAVAOZNAKA         varchar(5)                     not null,
+   DRZAVANAZIV          varchar(50)                    null,
+   constraint PK_DRZAVA primary key (DRZAVAID)
+);
+
+/*==============================================================*/
+/* Index: DRZAVA_PK                                             */
+/*==============================================================*/
+create unique index DRZAVA_PK on DRZAVA (
+DRZAVAID ASC
+);
+
+/*==============================================================*/
+/* Table: NASELJENO_MJESTO                                      */
+/*==============================================================*/
+create table NASELJENO_MJESTO 
+(
+   NASELJENOMJESTOID    integer                        not null,
+   DRZAVAID             integer                        null,
+   ORGANIZACIJAID       integer                        null,
+   RADNIKID             integer                        null,
+   NASELJENOMJESTONAZIV varchar(50)                    not null,
+   NASELJENOMJESTOPOSTANSKIBROJ varchar(7)                     null,
+   constraint PK_NASELJENO_MJESTO primary key (NASELJENOMJESTOID)
+);
+
+/*==============================================================*/
+/* Index: NASELJENO_MJESTO_PK                                   */
+/*==============================================================*/
+create unique index NASELJENO_MJESTO_PK on NASELJENO_MJESTO (
+NASELJENOMJESTOID ASC
+);
+
+/*==============================================================*/
+/* Index: NASELJENOMJESTOPRIPADADRZAVI_FK                       */
+/*==============================================================*/
+create index NASELJENOMJESTOPRIPADADRZAVI_FK on NASELJENO_MJESTO (
+DRZAVAID ASC
+);
+
+/*==============================================================*/
+/* Index: ORGANIZACIJAPRIPADANASELJENOMMJESTU_FK                */
+/*==============================================================*/
+create index ORGANIZACIJAPRIPADANASELJENOMMJESTU_FK on NASELJENO_MJESTO (
+ORGANIZACIJAID ASC
+);
+
+/*==============================================================*/
+/* Index: RADNIKIMANASELJENOMJESTO_FK                           */
+/*==============================================================*/
+create index RADNIKIMANASELJENOMJESTO_FK on NASELJENO_MJESTO (
+RADNIKID ASC
+);
+
+/*==============================================================*/
+/* Table: OBILJENJA                                             */
+/*==============================================================*/
+create table OBILJENJA 
+(
+   OBOLJENJEID          smallint                       not null,
+   OBOLJENJESIFRA       varchar(10)                    null,
+   OBOLJENJENAZIV       varchar(100)                   null,
+   constraint PK_OBILJENJA primary key (OBOLJENJEID)
+);
+
+/*==============================================================*/
+/* Index: OBILJENJA_PK                                          */
+/*==============================================================*/
+create unique index OBILJENJA_PK on OBILJENJA (
+OBOLJENJEID ASC
+);
+
+/*==============================================================*/
+/* Table: ORGANIZACIJA                                          */
+/*==============================================================*/
+create table ORGANIZACIJA 
+(
+   ORGANIZACIJAID       integer                        not null,
+   ORGANIZACIJANAZIV    varchar(150)                   not null,
+   ORGANIZACIJASIFRA    varchar(10)                    null,
+   ORGANIZACIJAJIB      varchar(13)                    null,
+   ORGANIZACIJAADRESA   varchar(30)                    null,
+   ORGANIZACIJATELEFON  varchar(20)                    null,
+   constraint PK_ORGANIZACIJA primary key (ORGANIZACIJAID)
+);
+
+/*==============================================================*/
+/* Index: ORGANIZACIJA_PK                                       */
+/*==============================================================*/
+create unique index ORGANIZACIJA_PK on ORGANIZACIJA (
+ORGANIZACIJAID ASC
+);
+
+/*==============================================================*/
+/* Table: PORODICA                                              */
+/*==============================================================*/
+create table PORODICA 
+(
+   PORODICAID           smallint                       not null,
+   PORODICABROJCLANOVA  smallint                       not null,
+   PORODICANAPOMENA     varchar(250)                   null,
+   PORODICAPREZIME      varchar(50)                    not null,
+   constraint PK_PORODICA primary key (PORODICAID)
+);
+
+/*==============================================================*/
+/* Index: PORODICA_PK                                           */
+/*==============================================================*/
+create unique index PORODICA_PK on PORODICA (
+PORODICAID ASC
+);
+
+/*==============================================================*/
+/* Table: RADNIK                                                */
+/*==============================================================*/
+create table RADNIK 
+(
+   RADNIKID             integer                        not null,
+   ORGANIZACIJAID       integer                        null,
+   RADNOMJESTOID        integer                        null,
+   RADNIKSIFRA          varchar(10)                    null,
+   RADNIKIME            varchar(20)                    not null,
+   RADNIKPREZIME        varchar(50)                    null,
+   RADNIKDATUMRODJENJA  timestamp                      not null,
+   RADNIKJMBG           varchar(13)                    null,
+   constraint PK_RADNIK primary key (RADNIKID)
+);
+
+/*==============================================================*/
+/* Index: RADNIK_PK                                             */
+/*==============================================================*/
+create unique index RADNIK_PK on RADNIK (
+RADNIKID ASC
+);
+
+/*==============================================================*/
+/* Index: RADNIKZANIMANJEORGANIZACIJA_FK                        */
+/*==============================================================*/
+create index RADNIKZANIMANJEORGANIZACIJA_FK on RADNIK (
+ORGANIZACIJAID ASC
+);
+
+/*==============================================================*/
+/* Index: RADNIKIMARADNOMJESTO_FK                               */
+/*==============================================================*/
+create index RADNIKIMARADNOMJESTO_FK on RADNIK (
+RADNOMJESTOID ASC
+);
+
+/*==============================================================*/
+/* Table: RADNIKIMAZANIMANJE                                    */
+/*==============================================================*/
+create table RADNIKIMAZANIMANJE 
+(
+   ZANIMANJEID          integer                        not null,
+   RADNIKID             integer                        not null,
+   constraint PK_RADNIKIMAZANIMANJE primary key (ZANIMANJEID, RADNIKID)
+);
+
+/*==============================================================*/
+/* Index: RADNIKIMAZANIMANJE_PK                                 */
+/*==============================================================*/
+create unique index RADNIKIMAZANIMANJE_PK on RADNIKIMAZANIMANJE (
+ZANIMANJEID ASC,
+RADNIKID ASC
+);
+
+/*==============================================================*/
+/* Index: RADNIKIMAZANIMANJE2_FK                                */
+/*==============================================================*/
+create index RADNIKIMAZANIMANJE2_FK on RADNIKIMAZANIMANJE (
+RADNIKID ASC
+);
+
+/*==============================================================*/
+/* Index: RADNIKIMAZANIMANJE_FK                                 */
+/*==============================================================*/
+create index RADNIKIMAZANIMANJE_FK on RADNIKIMAZANIMANJE (
+ZANIMANJEID ASC
+);
+
+/*==============================================================*/
+/* Table: RADNOMJESTO                                           */
+/*==============================================================*/
+create table RADNOMJESTO 
+(
+   RADNOMJESTOID        integer                        not null,
+   RADNOMJESTOSIFRA     varchar(10)                    not null,
+   RADNOMJESTONAZIV     varchar(60)                    null,
+   constraint PK_RADNOMJESTO primary key (RADNOMJESTOID)
+);
+
+/*==============================================================*/
+/* Index: RADNOMJESTO_PK                                        */
+/*==============================================================*/
+create unique index RADNOMJESTO_PK on RADNOMJESTO (
+RADNOMJESTOID ASC
+);
+
+/*==============================================================*/
+/* Table: ZANIMANJE                                             */
+/*==============================================================*/
+create table ZANIMANJE 
+(
+   ZANIMANJEID          integer                        not null,
+   ZANIMANJESIFRA       varchar(10)                    null,
+   ZANIMANJENAZIV       varchar(70)                    null,
+   constraint PK_ZANIMANJE primary key (ZANIMANJEID)
+);
+
+/*==============================================================*/
+/* Index: ZANIMANJE_PK                                          */
+/*==============================================================*/
+create unique index ZANIMANJE_PK on ZANIMANJE (
+ZANIMANJEID ASC
+);
+
+alter table CLAN
+   add constraint FK_CLAN_CLANBOLUJ_OBILJENJ foreign key (OBOLJENJEID)
+      references OBILJENJA (OBOLJENJEID)
+      on update cascade
+      on delete cascade;
+
+alter table CLAN
+   add constraint FK_CLAN_CLANDOLAZ_NASELJEN foreign key (NASELJENOMJESTOID)
+      references NASELJENO_MJESTO (NASELJENOMJESTOID)
+      on update cascade
+      on delete cascade;
+
+alter table CLAN
+   add constraint FK_CLAN_CLANPRIPA_ORGANIZA foreign key (ORGANIZACIJAID)
+      references ORGANIZACIJA (ORGANIZACIJAID)
+      on update cascade
+      on delete cascade;
+
+alter table CLAN
+   add constraint FK_CLAN_CLANPRIPA_PORODICA foreign key (PORODICAID)
+      references PORODICA (PORODICAID)
+      on update cascade
+      on delete cascade;
+
+alter table NASELJENO_MJESTO
+   add constraint FK_NASELJEN_NASELJENO_DRZAVA foreign key (DRZAVAID)
+      references DRZAVA (DRZAVAID)
+      on update cascade
+      on delete cascade;
+
+alter table NASELJENO_MJESTO
+   add constraint FK_NASELJEN_ORGANIZAC_ORGANIZA foreign key (ORGANIZACIJAID)
+      references ORGANIZACIJA (ORGANIZACIJAID)
+      on update cascade
+      on delete cascade;
+
+alter table NASELJENO_MJESTO
+   add constraint FK_NASELJEN_RADNIKIMA_RADNIK foreign key (RADNIKID)
+      references RADNIK (RADNIKID)
+      on update cascade
+      on delete cascade;
+
+alter table RADNIK
+   add constraint FK_RADNIK_RADNIKIMA_RADNOMJE foreign key (RADNOMJESTOID)
+      references RADNOMJESTO (RADNOMJESTOID)
+      on update cascade
+      on delete cascade;
+
+alter table RADNIK
+   add constraint FK_RADNIK_RADNIKZAN_ORGANIZA foreign key (ORGANIZACIJAID)
+      references ORGANIZACIJA (ORGANIZACIJAID)
+      on update cascade
+      on delete cascade;
+
+alter table RADNIKIMAZANIMANJE
+   add constraint FK_RADNIKIM_RADNIKIMA_ZANIMANJ foreign key (ZANIMANJEID)
+      references ZANIMANJE (ZANIMANJEID)
+      on update cascade
+      on delete cascade;
+
+alter table RADNIKIMAZANIMANJE
+   add constraint FK_RADNIKIM_RADNIKIMA_RADNIK foreign key (RADNIKID)
+      references RADNIK (RADNIKID)
+      on update cascade
+      on delete cascade;
+
